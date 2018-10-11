@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<script src="angular.min.js"></script>
+<script type="text/javascript">
+var app = angular.module("app",[ ]);
+
+app.factory("myFactory", function(){
+  return {
+    getName : function(){
+      return "Debashis";
+    },
+    getSalary : function(){
+      return 3100;
+    }
+  }
+});
+
+app.service("myService", function(){
+  this.getName = function(){
+    return "Debashis";
+  };
+
+  this.getSalary = function(){
+    return 1000;
+  }
+})
+
+app.controller("testCtrl", function($scope, $rootScope, $http, $q) {
+  var first = $http.get("/first.json"), second = $http.get("/second.json"), third = $http.get("/third.json"); 
+  $q.all([first, second, third]).then(function (result) {
+    debugger;
+    var tmp = []; angular.forEach(result, function (response) { 
+      tmp.push(response.data); });
+      return tmp; 
+      }).then(function (tmpResult) {
+        debugger;
+         $scope.combinedResult = tmpResult.join(", "); 
+         });
+
+  $scope.name = "Deba";
+  $scope.$watch("name", function(newVal, oldVal){
+    //$scope.name = $scope.name + "a";
+    console.log("changed value from" + oldVal + " to " +newVal);
+  });
+
+  $scope.changeFn = function(val){
+    console.log(val);
+  };
+
+
+  $rootScope.$watch(function(){
+  console.log("-digest is working");
+})
+})
+</script>
+<body>
+
+<div ng-app="app">
+  <div ng-controller="testCtrl">
+    <form name="form1">
+        <input type="text" ng-model="name" name="uname" required ></>
+        <input type="text" ng-model="title" name="titile" ng-minlength="2" ></>
+        <input type="button" ng-click="changeFn(form1)" value="submit"></>
+    </form>
+    <span ng-bind="name"></>
+  </div>
+</div>
+
+</body>
